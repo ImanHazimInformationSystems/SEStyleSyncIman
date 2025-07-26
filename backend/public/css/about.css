@@ -6,11 +6,6 @@ body {
   color: #333;
 }
 
-.container {
-  max-width: 1200px;
-  margin: auto;
-}
-
 .main-title {
   padding-top: 30px;
 }

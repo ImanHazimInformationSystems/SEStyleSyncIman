@@ -1,39 +1,59 @@
-// backend/routes/sellerRoutes.js
-
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
-const Product = require('../models/Product');
+const auth = require("../middleware/authMiddleware");
+const Product = require("../models/Product");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
-// GET: Seller's products (assuming you track seller by user ID)
-router.get('/', protect, async (req, res) => {
-  const products = await Product.find({ seller: req.user._id });
-  res.json(products);
-});
-
-// POST: Add product
-router.post('/', protect, async (req, res) => {
+// POST: Add new product (by seller)
+router.post("/add-product", auth, upload.single("video"), async (req, res) => {
   try {
     const { name, brand, category, description, price, stock } = req.body;
-    const videoUrl = req.file ? `/uploads/videos/${req.file.filename}` : null;
 
-    const product = new Product({
+    if (!name || !price) {
+      return res.status(400).json({ message: "Name and price are required." });
+    }
+
+    const videoPath = req.file ? `/uploads/${req.file.filename}` : "";
+
+    const product = await Product.create({
       name,
       brand,
       category,
       description,
       price,
       stock,
-      imageUrl: videoUrl,
-      seller: req.user._id
+      seller: req.user._id,
+      imageUrl: videoPath,
     });
 
-    await product.save();
-    res.status(201).json({ message: "Product added", product });
-
+    res.status(201).json(product);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to add product" });
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// GET: Seller's products
+router.get("/products", auth, async (req, res) => {
+  try {
+    const products = await Product.find({ seller: req.user._id, isDeleted: false });
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// DELETE: Seller deletes their product
+router.delete("/products/:id", auth, async (req, res) => {
+  try {
+    const product = await Product.findOneAndUpdate(
+      { _id: req.params.id, seller: req.user._id },
+      { isDeleted: true }
+    );
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    res.json({ message: "Deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
