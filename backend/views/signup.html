@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>StyleSync Login</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet">
+        <link href="css/signup.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#!">
+                    <img src="static/LogoStyleSync.png" alt="Logo" style="height: 100%; width: 150px;" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Home</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="center-section">
+            <div class="wrapper">
+                <form id="signupForm" method="POST" autocomplete="off">
+                    <h1>Sign Up</h1>
+                    <div class="input-box">
+                        <input type="text" name="name" placeholder="Username" required autocomplete="new-username">
+                        <i class='bx bxs-user-circle'></i>
+                    </div>
+                    <div class="input-box">
+                        <input type="email" name="email" placeholder="Email" required autocomplete="new-email">
+                        <i class='bx bxs-envelope'></i>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
+                        <i class="bi bi-eye" id="togglePassword"></i> 
+                    </div>
+                    <div class="input-box">
+                        <input type="password" name="confirmPassword" placeholder="Confirm Password" required autocomplete="new-password">
+                        <i class="bi bi-eye" id="toggleConfirmPassword"></i>
+                    </div>
+                    <div class="remember-forgot">
+                        <label><input type="checkbox"> Remember Me</label>
+                    </div>
+
+                    <button type="submit" class="btn">Sign Up</button>
+
+                    <div class="register-link">
+                        <p>Have an account? <a href="login.html">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("signupForm");
+            if (form) form.reset();
+
+            // Extra step: manually clear fields
+            form.name.value = '';
+            form.email.value = '';
+            form.password.value = '';
+            form.confirmPassword.value = '';
+        });
+        </script>
+
+
+
+        <script>
+        document.getElementById("signupForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const name = e.target.name.value;
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        const confirmPassword = e.target.confirmPassword.value;
+
+        if (password !== confirmPassword) return alert("Passwords do not match!");
+
+        const res = await fetch('/api/auth/signup', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            alert("Signup successful! Please login.");
+            window.location.href = "login.html";
+        } else {
+            alert(data.message || "Signup failed");
+        }
+        });
+
+        </script>
+
+        <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("signupForm");
+            if (form) form.reset();
+        });
+        </script>
+
+
+
+
+
+    </body>
+</html>

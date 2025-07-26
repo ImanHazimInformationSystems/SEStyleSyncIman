@@ -1,0 +1,183 @@
+Absolutely, Iman. Here is the **chronological, full checklist** to build your **e-commerce full-stack website** from start to deployment, **step by step**. This checklist follows a logical build-up: backend → frontend → integration → admin → polish → deploy.
+
+---
+
+## ✅ FULL DEVELOPMENT CHECKLIST
+
+---
+
+### 🚀 1. **Project Setup**
+
+* [ ] Create root project folder `ecommerce-project`
+* [ ] Initialize backend with Node.js & Express (`backend/`)
+* [ ] Initialize frontend with React (`frontend/`)
+* [ ] Setup Git and GitHub repository
+
+---
+
+### 🧱 2. **Backend Setup**
+
+#### ✅ Basic Configuration
+
+* [ ] Install dependencies: `express`, `mongoose`, `dotenv`, `bcryptjs`, `jsonwebtoken`, `cors`, `nodemailer`
+* [ ] Setup `index.js` with Express server
+* [ ] Create `.env` and `connectDB.js` for MongoDB Atlas connection
+* [ ] Setup folder structure:
+
+  * `controllers/`, `models/`, `routes/`, `middleware/`, `utils/`, `database/`, `seed/`
+
+#### ✅ Authentication System
+
+* [ ] Create `User` model (username, email, password, role, addresses)
+* [ ] Add signup, login, OTP verification, password reset routes
+* [ ] Hash password, JWT token generation
+* [ ] Middleware for authentication and role-based access
+
+#### ✅ Product Management (Admin + Public)
+
+* [ ] Create `Product` model (name, price, category, stock, soft-delete flag, attributes)
+* [ ] Routes: Add, edit, delete, soft-delete, get products
+* [ ] Public endpoints for viewing products and details
+* [ ] Upload image support (optional)
+
+#### ✅ Cart & Wishlist
+
+* [ ] Cart logic (add, remove, adjust quantity, subtotal calc)
+* [ ] Wishlist model with annotations (notes per product)
+
+#### ✅ Review System
+
+* [ ] Allow users to add/edit/delete reviews
+* [ ] Automatically update product average rating
+* [ ] Show star distribution
+
+#### ✅ Order Management
+
+* [ ] Create `Order` model (items, status, payment method, total price)
+* [ ] Place new orders
+* [ ] View order history (user)
+* [ ] Admin: view/update orders, change status
+
+#### ✅ Middleware & Utilities
+
+* [ ] Create `authMiddleware.js` for role checks
+* [ ] Create error handler
+* [ ] Setup OTP & email utility
+* [ ] Seed database for development
+
+---
+
+### 🎨 3. **Frontend Setup**
+
+#### ✅ Initial Setup
+
+* [ ] Create React app with `create-react-app`
+* [ ] Install: `@mui/material`, `axios`, `react-router-dom`
+* [ ] Setup folder structure:
+
+  * `pages/`, `features/`, `layout/`, `hooks/`, `theme/`, `assets/`
+
+#### ✅ Routing System
+
+* [ ] Setup routing in `App.js` using `react-router-dom`
+* [ ] Create protected routes for user and admin
+* [ ] Navbar + Footer component
+
+---
+
+### 🖼️ 4. **Frontend Pages**
+
+#### 🔐 Auth Pages
+
+* [ ] `/login`
+* [ ] `/signup`
+* [ ] `/otp`
+* [ ] `/forgot-password`
+* [ ] `/reset-password`
+
+#### 👤 User Pages
+
+* [ ] `/` – Home (hero banner + product highlights)
+* [ ] `/products` – Browse all products
+* [ ] `/product/:id` – Product details + reviews
+* [ ] `/cart` – Shopping cart
+* [ ] `/wishlist` – Wishlist with note input
+* [ ] `/profile` – Email, username, address mgmt
+* [ ] `/orders` – Order history
+* [ ] `/checkout` – Confirm and place order
+
+#### 🔐 Admin Pages
+
+* [ ] `/admin` – Admin dashboard overview
+* [ ] `/admin/products` – Manage products
+* [ ] `/admin/orders` – Manage orders
+* [ ] `/admin/users` – (optional) Manage users
+
+---
+
+### ⚙️ 5. **Frontend Logic**
+
+* [ ] Setup Axios instance for API calls
+* [ ] Handle token storage (localStorage or cookies)
+* [ ] Create `useAuth` hook
+* [ ] Fetch and display products, orders, user data
+* [ ] Form validations and alerts
+* [ ] Handle loading and error states
+* [ ] Use Material UI components for polished design
+
+---
+
+### 🔗 6. **Integrate Frontend ↔ Backend**
+
+* [ ] Connect auth API (signup/login/OTP/etc.)
+* [ ] Connect product listing/details API
+* [ ] Sync cart with localStorage/backend
+* [ ] Submit orders from cart
+* [ ] Update profile from frontend
+* [ ] Submit and fetch reviews
+* [ ] Add/remove wishlist items
+
+---
+
+### 🧪 7. **Testing**
+
+* [ ] Test all API endpoints with Postman
+* [ ] Test UI workflows: signup, login, checkout, wishlist, etc.
+* [ ] Test admin functions: product add/edit/delete
+* [ ] Validate input forms
+* [ ] Handle edge cases (empty cart, invalid product ID, etc.)
+
+---
+
+### 📦 8. **Deployment**
+
+#### ✅ Backend
+
+* [ ] Push backend to GitHub
+* [ ] Deploy to **Vercel** (API functions) or **Render** (Express server)
+
+#### ✅ Frontend
+
+* [ ] Push frontend to GitHub
+* [ ] Deploy to **Vercel**
+* [ ] Set up environment variables
+* [ ] Setup domain (optional)
+
+---
+
+### 📄 9. **Final Touches**
+
+* [ ] Setup README.md with install & usage instructions
+* [ ] Add favicon, site title
+* [ ] Test on mobile & different browsers
+* [ ] Setup proper 404 pages
+* [ ] Monitor logs for bugs
+
+---
+
+Would you like me to:
+
+1. Turn this checklist into a **markdown document for GitHub**?
+2. Begin implementing the first item: `User Model + Auth (signup/login)` in backend?
+
+Let me know!

@@ -1,0 +1,80 @@
+<h2>Product Management</h2>
+<form id="productForm">
+  <input type="text" name="name" placeholder="Product Name" required />
+  <input type="text" name="brand" placeholder="Brand" />
+  <input type="text" name="category" placeholder="Category" />
+  <input type="number" name="price" placeholder="Price" required />
+  <input type="number" name="stock" placeholder="Stock" required />
+  <input type="text" name="imageUrl" placeholder="Image URL" />
+  <textarea name="description" placeholder="Description"></textarea>
+  <button type="submit">Add Product</button>
+</form>
+
+<hr>
+<h3>All Products</h3>
+<div id="productList"></div>
+
+<script>
+const token = localStorage.getItem("token");
+
+document.getElementById("productForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.target;
+
+  const product = {
+    name: form.name.value,
+    brand: form.brand.value,
+    category: form.category.value,
+    price: form.price.value,
+    stock: form.stock.value,
+    imageUrl: form.imageUrl.value,
+    description: form.description.value
+  };
+
+  const res = await fetch("/api/products", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(product)
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    alert("Product added!");
+    loadProducts();
+  } else {
+    alert(data.message || "Failed to add product");
+  }
+});
+
+async function loadProducts() {
+  const res = await fetch("/api/products");
+  const products = await res.json();
+
+  const container = document.getElementById("productList");
+  container.innerHTML = products.map(p => `
+    <div>
+      <b>${p.name}</b> - $${p.price}
+      <button onclick="deleteProduct('${p._id}')">Delete</button>
+    </div>
+  `).join('');
+}
+
+async function deleteProduct(id) {
+  const res = await fetch(`/api/products/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await res.json();
+  if (res.ok) {
+    alert("Product deleted");
+    loadProducts();
+  } else {
+    alert(data.message);
+  }
+}
+
+loadProducts();
+</script>
