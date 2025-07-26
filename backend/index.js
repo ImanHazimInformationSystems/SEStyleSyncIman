@@ -51,7 +51,7 @@ app.get('/product-details.html', (req, res) => {
 
 app.get('/about-us.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'about-us.html'));
-});
+}); 
 
 app.get('/cart.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'cart.html'));
