@@ -1,0 +1,177 @@
+/* General Body Styling */
+body {
+    background-color: #f8f9fa; /* Light gray background */
+    font-family: 'Roboto', sans-serif; /* Example font */
+}
+
+/* Horizontal Rule under Page Title */
+hr {
+    border-top: 1px solid #dee2e6;
+    max-width: 400px; /* Adjust as needed */
+    margin: 0 auto 3rem auto; /* Center it */
+}
+
+/* Card Styling */
+.card {
+    border: none; /* Remove default card border */
+    border-radius: .5rem; /* Slightly rounded corners */
+}
+
+/* Order Status Progress Bar */
+.tracking-progress-container {
+    position: relative;
+    padding: 0 15px; /* Adjust padding for lines to start/end properly */
+}
+
+.tracking-progress-bar {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.tracking-progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px; /* Line thickness */
+    background-color: #e9ecef; /* Inactive line color */
+    transform: translateY(-50%);
+    z-index: 1; /* Ensure line is behind circles */
+}
+
+.tracking-progress-bar li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 2; /* Ensure circles are above the line */
+    flex: 1; /* Distribute items evenly */
+}
+
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    background-color: #e9ecef; /* Default inactive background */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    color: #6c757d; /* Default icon color */
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border: 2px solid #e9ecef; /* Border to match inactive color initially */
+}
+
+.icon-circle.active {
+    background-color: #28a745; /* Green for active */
+    color: #fff; /* White icon for active */
+    border-color: #28a745; /* Green border for active */
+}
+
+.icon-circle.active i {
+    color: #fff; /* Ensure icon itself is white */
+}
+
+.step-label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #343a40; /* Darker text for labels */
+}
+
+.tracking-progress-bar li small {
+    color: #6c757d; /* Lighter text for dates */
+    font-size: 0.8rem;
+}
+
+/* Line connecting active steps */
+.tracking-progress-bar li.active:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%; /* Line segment width */
+    height: 4px;
+    background-color: #28a745; /* Green for active line */
+    transform: translateY(-50%) translateX(0); /* Position correctly */
+    z-index: 0; /* Behind the circles but above the base line */
+    transition: background-color 0.3s ease;
+}
+
+.map-container {
+    /* Existing styles like position, overflow, border-radius */
+    min-height: 350px; /* Adjust as needed to accommodate buttons and map */
+    /* If you had .map-container img, remove it as it's no longer an image */
+}
+
+#map {
+    width: 100%;
+    height: 300px; /* Explicit height for the map */
+    border-radius: 0 0 .5rem .5rem; /* Match card bottom corners */
+    /* Remove any background image styles if they were for the placeholder */
+}
+
+/* Adjust the positioning for the pseudo-elements on smaller screens or specific layouts if needed */
+/* For example, for the line between steps, we need to consider the next active state as well */
+.tracking-progress-bar li.active + li::before {
+    background-color: #28a745; /* This attempts to make the line between active circles green */
+}
+
+/* This is a common trick to make the line fill up to the next active step */
+.tracking-progress-bar li.active + li .icon-circle {
+    /* Style for the next circle if it's following an active one, not necessarily active itself */
+}
+
+
+/* Map Container Styling */
+.map-container {
+    min-height: 250px; /* Ensure map has some height */
+    position: relative;
+    overflow: hidden; /* Hide anything outside the card */
+    border-radius: .5rem;
+}
+
+.map-container img {
+    object-fit: cover; /* Cover the container */
+    max-height: 300px; /* Limit height */
+}
+
+/* Adjust map buttons */
+.map-container .btn-outline-secondary {
+    border-color: #ced4da;
+    color: #6c757d;
+}
+.map-container .btn-outline-secondary.active {
+    background-color: #6c757d;
+    color: #fff;
+    border-color: #6c757d;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .tracking-progress-bar {
+        flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+        justify-content: flex-start; /* Align items to start */
+    }
+    .tracking-progress-bar li {
+        flex: none; /* Don't force equal width */
+        width: 33.33%; /* Example for 3 per row */
+        margin-bottom: 20px; /* Space between rows */
+        padding: 0 10px; /* Space within items */
+    }
+
+    /* Adjust lines for wrapped layout - might need more complex JS/CSS for perfect lines */
+    .tracking-progress-bar::before {
+        display: none; /* Hide horizontal line on small screens */
+    }
+    .tracking-progress-bar li::after {
+        display: none; /* Hide individual line segments */
+    }
+    /* You might consider a vertical progress bar for very small screens */
+}
