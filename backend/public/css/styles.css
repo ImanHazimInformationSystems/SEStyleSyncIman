@@ -8193,13 +8193,19 @@ textarea.form-control-lg {
   background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
 }
 
-.bg-dark {
-  --bs-bg-opacity: 1;
-  background-color: #06402B !important;
+.bg-image{
   background-image: url("/images/leaf_bg.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100%;
+  z-index: 2;
+  font-family: 'Roboto', Arial, sans-serif;
+  box-shadow: 0 10px 50px rgba(0,0,0,0.35);
+}
+
+.bg-dark {
+  --bs-bg-opacity: 1;
+  background-color: #06402B !important;
 }
 
 header.bg-dark {
