@@ -17,7 +17,7 @@ app.use(express.json());
 
 // Static Assets
 app.use(express.static(path.join(__dirname, "public"))); // ✅ for CSS, JS, Images
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'))); // serve uploaded media
+app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));// serve uploaded media
 
 // ----------------------
 // API ROUTES

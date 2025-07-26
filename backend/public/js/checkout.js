@@ -1,44 +1,68 @@
 let subtotal = 0;
 let discountAmount = 0; // ✅ must match everywhere
 
-function renderCartItems() {
-  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+async function renderCartItems() {
   const container = document.getElementById("cart-items");
-
+  const token = localStorage.getItem("token");
   subtotal = 0;
   container.innerHTML = "";
 
-  if (cartItems.length === 0) {
+  let items = [];
+
+  if (token) {
+    // Fetch from backend for logged-in users
+    try {
+      const res = await fetch("/api/cart", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Failed to load cart");
+
+      const data = await res.json();
+      items = data.items || [];
+    } catch (err) {
+      console.error("Error fetching cart:", err);
+      container.innerHTML = "<p>Failed to load cart.</p>";
+      return;
+    }
+  } else {
+    // Use guest cart from localStorage
+    items = JSON.parse(localStorage.getItem("cartItems")) || [];
+  }
+
+  if (items.length === 0) {
     container.innerHTML = "<p>Your cart is empty.</p>";
     return;
   }
 
-  cartItems.forEach(item => {
-    let price = item.price;
-    if (typeof price === "string") {
-      price = parseFloat(price.replace(/[^0-9.]/g, ""));
-    }
+  for (const item of items) {
+    // Unified structure
+    const title = token ? item.product.name : item.title;
+    const price = token ? item.product.price : parseFloat(item.price.replace(/[^0-9.]/g, ""));
+    const image = token ? item.product.imageUrl || "/images/default.jpg" : item.image;
+    const quantity = item.quantity;
 
-    console.log(`Title: ${item.title}, Price: ${price}, Qty: ${item.quantity}`);
-
-    const itemTotal = price * item.quantity;
+    const itemTotal = price * quantity;
     subtotal += itemTotal;
 
     const div = document.createElement("div");
     div.className = "cart-item";
     div.innerHTML = `
-      <img src="${item.image}" alt="${item.title}">
+      <img src="${image}" alt="${title}">
       <div>
-        <p>${item.title}</p>
-        <span>${item.quantity}x</span>
+        <p>${title}</p>
+        <span>${quantity}x</span>
       </div>
       <strong>$ ${itemTotal.toFixed(2)}</strong>
     `;
     container.appendChild(div);
-  });
+  }
 
-  updateTotals(); // ✅ update after render
+  updateTotals(); // ✅ update totals after rendering
 }
+
 
 function updateTotals() {
   const shipping = 10.00;
@@ -94,7 +118,6 @@ function selectPayment(method) {
 
 // On load, re-apply saved payment method
 window.onload = function() {
-  renderCartItems();
   document.getElementById("apply-discount-btn").addEventListener("click", applyDiscount);
 
   if (selectedPaymentMethod) {

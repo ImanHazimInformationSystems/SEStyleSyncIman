@@ -71,19 +71,54 @@ function setupProductPage() {
 
 
 /* ---------- CART PAGE ---------- */
-function setupCartPage() {
-  const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+async function setupCartPage() {
+  const token = localStorage.getItem("token");
+  const cartItemsContainer = document.querySelector(".cart-items");
+  const totalElement = document.querySelector(".cart-total-price");
 
-  storedCart.forEach(item => {
-    addItemToCart(item.title, item.price, item.image, item.quantity);
-  });
+  // Clear existing items
+  cartItemsContainer.innerHTML = "";
 
-  updateCartTotal();
+  let items = [];
+  let total = 0;
 
-  const quantityInputs = document.getElementsByClassName("cart-quantity-input");
-  for (let input of quantityInputs) {
-    input.addEventListener("change", quantityChanged);
+  if (token) {
+    // Logged-in user: fetch from backend
+    try {
+      const res = await fetch("/api/cart", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to load cart");
+
+      items = data.items || [];
+
+      items.forEach(({ product, quantity }) => {
+        const price = product.price;
+        const title = product.name;
+        const image = product.imageUrl || "/images/default.jpg";
+        total += price * quantity;
+
+        addItemToCart(title, `$${price.toFixed(2)}`, image, quantity);
+      });
+    } catch (err) {
+      console.error("Cart fetch failed:", err.message);
+      alert("Failed to load cart.");
+    }
+  } else {
+    // Guest user: use localStorage
+    const storedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    storedCart.forEach(item => {
+      const price = parseFloat(item.price.replace("$", ""));
+      total += price * item.quantity;
+      addItemToCart(item.title, item.price, item.image, item.quantity);
+    });
   }
+
+  totalElement.innerText = `$${total.toFixed(2)}`;
+  updateCartCount();
 
   const plusButtons = document.getElementsByClassName("plus");
   const minusButtons = document.getElementsByClassName("minus");
@@ -93,7 +128,7 @@ function setupCartPage() {
       const input = this.parentElement.querySelector(".cart-quantity-input");
       input.value = parseInt(input.value) + 1;
       updateCartTotal();
-      updateCartInLocalStorage();
+      updateCartInLocalStorage(); // affects only guest carts
     });
   }
 
@@ -103,7 +138,7 @@ function setupCartPage() {
       if (parseInt(input.value) > 1) {
         input.value = parseInt(input.value) - 1;
         updateCartTotal();
-        updateCartInLocalStorage();
+        updateCartInLocalStorage(); // affects only guest carts
       }
     });
   }
@@ -115,6 +150,7 @@ function setupCartPage() {
 }
 
 
+
 /* ---------- SHARED FUNCTIONS ---------- */
 
 function addItemToCart(title, price, imageSrc, quantity) {
@@ -122,20 +158,28 @@ function addItemToCart(title, price, imageSrc, quantity) {
 
   const cartRow = document.createElement("tr");
   cartRow.classList.add("cart-row");
+   const isVideo = imageSrc.match(/\.(mp4|mov|webm)$/i);
   cartRow.innerHTML = `
-    <td style="display: flex; align-items: center; gap: 10px;">
-        <img src="${imageSrc}" width="60" height="60" style="object-fit: cover; border-radius: 5px;">
+      <td style="display: flex; align-items: center; gap: 10px;">
+        ${
+          isVideo
+            ? `<video width="60" height="60" style="border-radius: 5px;">
+                <source src="${imageSrc}" type="video/mp4">
+                Video not supported
+              </video>`
+            : `<img src="${imageSrc || '/images/default.jpg'}" width="60" height="60" style="object-fit: cover; border-radius: 5px;">`
+        }
         <span>${title}</span>
-    </td>
-    <td class="cart-price">${price}</td>
-    <td>
+      </td>
+      <td class="cart-price">${price}</td>
+      <td>
         <div class="quantity-controls" style="display: flex; align-items: center; gap: 5px;">
-            <input type="button" value="-" class="minus" />
-            <input type="number" class="cart-quantity-input" min="1" value="${quantity}" style="width: 50px; text-align: center;" readonly />
-            <input type="button" value="+" class="plus" />
+          <input type="button" value="-" class="minus" />
+          <input type="number" class="cart-quantity-input" min="1" value="${quantity}" style="width: 50px; text-align: center;" readonly />
+          <input type="button" value="+" class="plus" />
         </div>
-    </td>
-  `;
+      </td>
+    `;
 
   cartItemsContainer.appendChild(cartRow);
 }
@@ -198,5 +242,22 @@ function updateCartCount() {
   const cartCount = document.getElementById("cart-count");
   if (cartCount) {
     cartCount.textContent = totalQuantity;
+  }
+}
+
+function purchaseClicked() {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    // Logged-in user — you may want to send the cart to the backend for order processing
+    alert("Purchase successful! (Logged-in user)");
+    // Optionally: Clear server-side cart using a DELETE or POST to /api/cart/checkout
+  } else {
+    // Guest user — just clear localStorage
+    alert("Thank you for your purchase!");
+    localStorage.removeItem("cartItems");
+    document.querySelector(".cart-items").innerHTML = "";
+    document.querySelector(".cart-total-price").innerText = "$0.00";
+    updateCartCount();
   }
 }

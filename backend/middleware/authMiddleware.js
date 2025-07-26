@@ -1,43 +1,37 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-// Middleware to protect routes (ensures user is logged in)
 const protect = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  // ✅ Log incoming Authorization header
+  console.log("Incoming token:", req.headers.authorization);
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Unauthorized: No token provided' });
-  }
+  let token;
 
-  const token = authHeader.split(' ')[1];
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.userId || decoded.id).select('-password');
+      req.user = await User.findById(decoded.userId).select("-password");
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      if (!req.user) {
+        return res.status(403).json({ message: "User not found" });
+      }
+
+      // ✅ Optional: log user info
+      console.log("Authenticated user:", req.user);
+
+      next();
+    } catch (error) {
+      console.error("JWT verification failed:", error.message);
+      return res.status(403).json({ message: "Token failed", error: error.message });
     }
-
-    req.user = user; // attach user info to request
-    next();
-  } catch (err) {
-    console.error('JWT error:', err.message);
-    return res.status(403).json({ message: 'Invalid or expired token' });
+  } else {
+    return res.status(403).json({ message: "No token, authorization denied" });
   }
 };
 
-// Middleware to allow only admins
-const adminOnly = (req, res, next) => {
-  if (req.user?.role !== 'admin') {
-    return res.status(403).json({ message: 'Admins only' });
-  }
-  next();
-};
-
-module.exports = {
-  protect,
-  adminOnly,
-};
+module.exports = { protect };

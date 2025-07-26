@@ -1,12 +1,33 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../middleware/authMiddleware");
-const Product = require("../models/Product");
+const path = require("path");
+const fs = require("fs");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const { protect } = require("../middleware/authMiddleware");
+const Product = require("../models/Product");
+
+// Ensure uploads folder exists
+const uploadDir = path.join(__dirname, "..", "public", "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+// Configure multer storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const uniqueName = Date.now() + "-" + file.originalname.replace(/\s+/g, "_");
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ storage });
 
 // POST: Add new product (by seller)
-router.post("/add-product", auth, upload.single("video"), async (req, res) => {
+router.post("/add-product", protect, upload.single("video"), async (req, res) => {
   try {
     const { name, brand, category, description, price, stock } = req.body;
 
@@ -14,7 +35,7 @@ router.post("/add-product", auth, upload.single("video"), async (req, res) => {
       return res.status(400).json({ message: "Name and price are required." });
     }
 
-    const videoPath = req.file ? `/uploads/${req.file.filename}` : "";
+    const videoUrl = req.file ? `/uploads/${req.file.filename}` : "";
 
     const product = await Product.create({
       name,
@@ -24,7 +45,7 @@ router.post("/add-product", auth, upload.single("video"), async (req, res) => {
       price,
       stock,
       seller: req.user._id,
-      imageUrl: videoPath,
+      imageUrl: videoUrl, // rename to videoUrl in schema if preferred
     });
 
     res.status(201).json(product);
@@ -34,7 +55,7 @@ router.post("/add-product", auth, upload.single("video"), async (req, res) => {
 });
 
 // GET: Seller's products
-router.get("/products", auth, async (req, res) => {
+router.get("/products", protect, async (req, res) => {
   try {
     const products = await Product.find({ seller: req.user._id, isDeleted: false });
     res.json(products);
@@ -44,7 +65,7 @@ router.get("/products", auth, async (req, res) => {
 });
 
 // DELETE: Seller deletes their product
-router.delete("/products/:id", auth, async (req, res) => {
+router.delete("/products/:id", protect, async (req, res) => {
   try {
     const product = await Product.findOneAndUpdate(
       { _id: req.params.id, seller: req.user._id },
