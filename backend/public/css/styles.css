@@ -8196,6 +8196,10 @@ textarea.form-control-lg {
 .bg-dark {
   --bs-bg-opacity: 1;
   background-color: #06402B !important;
+  background-image: url("/images/leaf_bg.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
 }
 
 header.bg-dark {
