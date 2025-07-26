@@ -1,14 +1,33 @@
 const Product = require('../models/Product');
-const Review = require('../models/Review');
 
-exports.getProductWithReviews = async (req, res) => {
+// GET all products (public)
+exports.getAllProducts = async (req, res) => {
+  const products = await Product.find({ isDeleted: false });
+  res.json(products);
+};
+
+// GET product by ID (public)
+exports.getProductById = async (req, res) => {
   const product = await Product.findById(req.params.id);
-  if (!product) return res.status(404).json({ message: "Product not found" });
+  if (!product || product.isDeleted) return res.status(404).json({ message: 'Not found' });
+  res.json(product);
+};
 
-  const reviews = await Review.find({ product: req.params.id }).populate('user', 'name');
-  const avgRating = reviews.length > 0
-    ? (reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1)
-    : null;
+// POST new product (admin)
+exports.addProduct = async (req, res) => {
+  const product = new Product(req.body);
+  await product.save();
+  res.status(201).json(product);
+};
 
-  res.json({ product, reviews, avgRating });
+// PUT edit product (admin)
+exports.updateProduct = async (req, res) => {
+  const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(product);
+};
+
+// DELETE (soft) product (admin)
+exports.softDeleteProduct = async (req, res) => {
+  await Product.findByIdAndUpdate(req.params.id, { isDeleted: true });
+  res.json({ message: 'Product soft-deleted' });
 };

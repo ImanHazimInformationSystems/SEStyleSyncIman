@@ -35,7 +35,7 @@ app.get('/signup.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'signup.html'));
 });
 
-app.get('/forgot-password', (req, res) => {
+app.get('/forgot-password.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'forgot-password.html'));
 });
 
@@ -46,6 +46,17 @@ app.get('/reset-password', (req, res) => {
 app.get('/product-details.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'product-details.html'));
 });
+
+// Admin product management page
+app.get('/admin/products.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin', 'products.html'));
+});
+
+app.get('admin/products.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'products.html'));
+});
+
+
 
 // DB Connect
 mongoose.connect(process.env.MONGO_URI)
