@@ -1,0 +1,14 @@
+.btn-purchase-wrapper{
+   text-align: center;
+   padding: 2%;
+   width: 100%;
+ }
+
+ #shopping-cart{
+   padding: 5% 5%;
+ }
+
+ .cart-total{
+   text-align: right;
+   font-size: 1.3rem;
+ }

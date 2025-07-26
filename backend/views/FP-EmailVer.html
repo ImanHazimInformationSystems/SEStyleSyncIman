@@ -16,14 +16,12 @@
         
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
         <!-- Core theme CSS (includes Bootstrap)-->
-
         <link href="/css/styles.css" rel="stylesheet">
         <link href="/css/signup.css" rel="stylesheet">
-
+        
     </head>
 
     <body>
-        <div id="root"></div>
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
             <div class="container px-4 px-lg-5">
@@ -41,60 +39,24 @@
 
         <div class="center-section">
             <div class="wrapper">
-                <form id="loginForm" method="POST" autocomplete="off">
-                    <h1>Login</h1>
+                <form action="">
+                    <h1>Forgot Password</h1>
                     <div class="input-box">
-                        <input type="text" name="email" placeholder="Email" autocomplete="new-email" required>
-
+                        <input type="text" placeholder="Email" required>
                         <i class='bx bxs-user-circle'></i>
                     </div>
+                    <button type="submit" class="btn half-width-btn">Send Code</button>
+
                     <div class="input-box">
-                        <input type="password" id="password" name="password" placeholder="Password" required autocomplete="new-password">
-                        <i class="bi bi-eye" id="togglePassword"></i> 
-                    </div>
-                    <div class="remember-forgot">
-                        <label><input type="checkbox"> Remember Me</label>
-
-                        <a href="FP-EmailVer.html" >Forgot Password?</a>
+                        <input type="text" placeholder="Code" required>
+                        <i class='bx bxs-user-circle'></i>
                     </div>
 
-                    <button type="submit" class="btn">Login</button>
-
-                    <div class="register-link">
-                        <p>Don't have an account? <a href="signup.html"> Register</a></p>
-                    </div>
+                    <button type="submit" class="btn">Verify Email</button>
                 </form>
             </div>
         </div>
-
-
-        <script>
-        document.getElementById("loginForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-
-        const res = await fetch('/api/auth/login', {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
-            alert("Login successful!");
-            window.location.href = "index.html";
-        } else {
-            alert(data.message || "Login failed");
-        }
-        });
-
-        </script>
-
+        <script src="js/scripts.js"></script>
     </body>
 </html>
     
