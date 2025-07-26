@@ -1,345 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
-
-    <title>Hexashop - Product Detail Page</title>
-
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <!-- Bootstrap icons-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-
-
-    <!-- Additional CSS Files -->
-    
-    
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
-
-    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
-
-    <link rel="stylesheet" href="assets/css/templatemo-hexashop.css">
-    
-
-    <link rel="stylesheet" href="assets/css/owl-carousel.css">
-
-    <link rel="stylesheet" href="assets/css/lightbox.css">
-
-    <link href="/css/styles.css" rel="stylesheet" />
-<!--
-
-TemplateMo 571 Hexashop
-
-https://templatemo.com/tm-571-hexashop
-
--->
-    </head>
-    
-    <body>
-    
-    <!-- ***** Preloader Start ***** -->
-    <div id="preloader">
-        <div class="jumper">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    </div>  
-    <!-- ***** Preloader End ***** -->
-    
-    
-    <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#!">
-                    <img src="/images/LogoStyleSync.png" alt="Logo" style="height: 100%; width: 150px;" />
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about-us.html">About</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                            </ul>
-                            <li class="nav-item"><a class="nav-link" href="trackOrder.html">Track Order</a></li>
-                        </li>
-                    </ul>
-                    
-                    <a href="login.html" class="btn btn-outline-dark d-flex align-items-center me-2"> <i class="bi bi-person-fill"></i></i> Login
-                    </a>
-                    
-                    <a href="cart.html" class="btn btn-outline-dark d-flex align-items-center">
-                        <i class="bi-cart-fill me-1"></i>
-                        Cart
-                        <span id="cart-count" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </a>
-                </div>
-            </div>
-        </nav>
-
-    <!-- ***** Main Banner Area Start ***** -->
-    <div class="page-heading" id="top">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="inner-content">
-                        <h2>Product Page</h2>
-                        <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product Detail - StyleSync</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="/index.html">
+        <img src="/images/LogoStyleSync.png" alt="Logo" style="height: 100%; width: 150px;">
+      </a>
     </div>
-    <!-- ***** Main Banner Area End ***** -->
+  </nav>
 
+  <main class="container mt-5">
+    <h1 id="product-title">Loading...</h1>
+    <div id="product-details" class="row mt-4">
+      <div class="col-md-6" id="product-images">
+        <p>Loading image...</p>
+      </div>
+      <div class="col-md-6">
+        <h3 id="product-price">$--</h3>
+        <p id="product-description"></p>
 
-    <!-- ***** Product Area Starts ***** -->
-    <section class="section" id="product">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                <hr class="mt-5">
-                <div class="container review-section">
-                <h3>Customer Reviews</h3>
-                <div id="reviews-list" class="mb-4">
-                    <p>Loading reviews...</p>
-                </div>
-
-                <form id="reviewForm">
-                    <h5 class="mt-4">Write a Review</h5>
-                    <select name="rating" class="form-select mb-2" required>
-                    <option value="">Rating</option>
-                    <option value="1">⭐</option>
-                    <option value="2">⭐⭐</option>
-                    <option value="3">⭐⭐⭐</option>
-                    <option value="4">⭐⭐⭐⭐</option>
-                    <option value="5">⭐⭐⭐⭐⭐</option>
-                    </select>
-                    <textarea name="comment" class="form-control mb-2" placeholder="Your review..." required></textarea>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
-                </div>
-
-            </div>
-            <div class="col-lg-4">
-                <div class="right-content">
-                    <h4 id="product-title">Loading...</h4>
-                    <span id="product-price" class="shop-item-price">$--</span>
-                    <ul id="product-stars" class="stars"></ul>
-                    <div id="product-description">Loading...</div>
-
-                    <ul class="stars">
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                        <li><i class="fa fa-star"></i></li>
-                    </ul>
-                    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod kon tempor incididunt ut labore.</span>
-                    <div class="quote">
-                        <i class="fa fa-quote-left"></i><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiuski smod.</p>
-                    </div>
-                    <div class="quantity-content">
-                        <div class="left-content">
-                            <h6>No. of Orders</h6>
-                        </div>
-                        <div class="right-content">
-                            <div class="quantity buttons_added">
-                                <input type="button" value="-" class="minus"><input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="input-text qty text" size="4" pattern="" inputmode=""><input type="button" value="+" class="plus">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="total">
-                        <div>
-                          <button type="button" style="width: 100%;" class="btn btn-warning mt-auto shop-item-button"><i class="fa-solid fa-cart-shopping " style="margin-right: 4%;"></i>Add To Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
+        <div class="mb-3">
+          <label for="qty" class="form-label">Quantity</label>
+          <input type="number" id="qty" value="1" min="1" class="form-control" style="width: 100px;">
         </div>
-    </section>
-    <!-- ***** Product Area Ends ***** -->
-    
-    <!-- ***** Footer Start ***** -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="first-item">
-                        <div class="logo">
-                            <img src="assets/images/white-logo.png" alt="hexashop ecommerce templatemo">
-                        </div>
-                        <ul>
-                            <li><a href="#">StyleSync Ltd. 5th Floor, Orion Plaza, 245 Madison Avenue, New York, NY 10016, United States</a></li>
-                            <li><a href="#">support@stylesync.com</a></li>
-                            <li><a href="#">+1 (212) 555-0198</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <h4>Shopping &amp; Categories</h4>
-                    <ul>
-                        <li><a href="#">Men’s Shopping</a></li>
-                        <li><a href="#">Women’s Shopping</a></li>
-                        <li><a href="#">Kid's Shopping</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3">
-                    <h4>Useful Links</h4>
-                    <ul>
-                        <li><a href="#">Homepage</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Help</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3">
-                    <h4>Help &amp; Information</h4>
-                    <ul>
-                        <li><a href="#">Help</a></li>
-                        <li><a href="#">FAQ's</a></li>
-                        <li><a href="#">Shipping</a></li>
-                        <li><a href="#">Tracking ID</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-12">
-                    <div class="under-footer">
-                        <p>Copyright © 2022 HexaShop Co., Ltd. All Rights Reserved. 
-                        
-                        <br>Design: <a href="https://templatemo.com" target="_parent" title="free css templates">TemplateMo</a></p>
-                        <ul>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                            <li><a href="#"><i class="fa fa-behance"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+
+        <div>
+          <button id="add-to-cart-btn" class="btn btn-warning">
+            <i class="fa-solid fa-cart-shopping me-2"></i>Add to Cart
+          </button>
         </div>
-    </footer>
-    
+      </div>
+    </div>
+  </main>
 
-    <!-- jQuery -->
-    <script src="assets/js/jquery-2.1.0.min.js"></script>
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+    <p>StyleSync &copy; 2025</p>
+  </footer>
 
-    <!-- Bootstrap -->
-    <script src="assets/js/popper.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
+  <!-- Load jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Load cart logic -->
+  <script src="/js/cart.js"></script>
 
-    <!-- Plugins -->
-    <script src="assets/js/owl-carousel.js"></script>
-    <script src="assets/js/accordions.js"></script>
-    <script src="assets/js/datepicker.js"></script>
-    <script src="assets/js/scrollreveal.min.js"></script>
-    <script src="assets/js/waypoints.min.js"></script>
-    <script src="assets/js/jquery.counterup.min.js"></script>
-    <script src="assets/js/imgfix.min.js"></script> 
-    <script src="assets/js/slick.js"></script> 
-    <script src="assets/js/lightbox.js"></script> 
-    <script src="assets/js/isotope.js"></script> 
-    <script src="assets/js/quantity.js"></script>
-    
-    <!-- Global Init -->
-    <script src="/js/scripts.js"></script>
-
-    <script>
-
-        $(function() {
-            var selectedClass = "";
-            $("p").click(function(){
-            selectedClass = $(this).attr("data-rel");
-            $("#portfolio").fadeTo(50, 0.1);
-                $("#portfolio div").not("."+selectedClass).fadeOut();
-            setTimeout(function() {
-              $("."+selectedClass).fadeIn();
-              $("#portfolio").fadeTo(50, 1);
-            }, 500);
-                
-            });
-        });
-
-    </script>
-    <script src="js/cart.js"></script>
-
-    <script>
+  <script>
     const productId = new URLSearchParams(window.location.search).get("id");
-    const token = localStorage.getItem("token");
+    let product = null;
 
     async function loadProductDetail() {
-    const res = await fetch(`/api/products/${productId}`);
-    const { product, reviews, avgRating } = await res.json();
+      try {
+        const res = await fetch(`/api/products/${productId}`);
+        if (!res.ok) throw new Error("Failed to fetch product");
+        product = await res.json();
 
-    document.getElementById("product-title").textContent = product.name;
-    document.getElementById("product-price").textContent = `$${product.price}`;
-    document.getElementById("product-description").innerHTML = `<p>${product.description}</p>`;
+        document.getElementById("product-title").textContent = product.name;
+        document.getElementById("product-price").textContent = `$${product.price}`;
+        document.getElementById("product-description").innerHTML = `<p>${product.description}</p>`;
 
-    const stars = document.getElementById("product-stars");
-    stars.innerHTML = avgRating
-        ? Array(Math.round(avgRating)).fill('<li><i class="fa fa-star"></i></li>').join('')
-        : '<li>No ratings yet</li>';
+        const imgBox = document.getElementById("product-images");
+        imgBox.innerHTML = product.imageUrl
+          ? `<video src="${product.imageUrl}" class="w-100" autoplay muted loop controls></video>`
+          : `<p>No media available</p>`;
 
-    const imgBox = document.getElementById("product-images");
-    imgBox.innerHTML = product.imageUrl
-        ? `<img src="${product.imageUrl}" class="shop-item-image">`
-        : `<p>No image</p>`;
-
-    const reviewList = document.getElementById("reviews-list");
-    if (reviews.length === 0) {
-        reviewList.innerHTML = "<p>No reviews yet.</p>";
-    } else {
-        reviewList.innerHTML = reviews.map(r => `
-        <div class="border p-3 my-2 rounded">
-            <strong>${r.user?.name || "User"}</strong> - ${"⭐".repeat(r.rating)}
-            <p>${r.comment}</p>
-        </div>
-        `).join('');
-    }
+      } catch (err) {
+        console.error(err);
+        alert("Error loading product detail.");
+      }
     }
 
-    document.getElementById("reviewForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const rating = form.rating.value;
-    const comment = form.comment.value;
+    document.getElementById("add-to-cart-btn").addEventListener("click", async () => {
+      const token = localStorage.getItem("token");
+      const quantity = parseInt(document.getElementById("qty").value) || 1;
 
-    const res = await fetch(`/api/reviews/${productId}`, {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ rating, comment })
+      if (!product) return alert("Product not loaded yet");
+
+      if (token) {
+        const res = await fetch("/api/cart/add", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ productId: product._id, quantity })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert("Added to cart!");
+          updateCartCount();
+        } else {
+          alert(data.message || "Error adding to cart");
+        }
+      } else {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const existing = cart.find(item => item.id === product._id);
+        if (existing) {
+          existing.quantity += quantity;
+        } else {
+          cart.push({
+            id: product._id,
+            name: product.name,
+            price: product.price,
+            quantity
+          });
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount();
+        alert("Added to cart (guest)");
+      }
     });
 
-    const data = await res.json();
-    if (res.ok) {
-        alert("Review submitted!");
-        form.reset();
-        loadProductDetail();
-    } else {
-        alert(data.message || "Login required.");
+    async function updateCartCount() {
+      const badge = document.getElementById("cart-count");
+      if (!badge) return;
+
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        const res = await fetch("/api/cart", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await res.json();
+        const count = data?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+        badge.textContent = count;
+      } else {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        badge.textContent = count;
+      }
     }
-    });
 
     loadProductDetail();
-    </script>
+    updateCartCount();
+  </script>
 
-  </body>
+  <script>
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const badge = document.getElementById("cart-count");
+    if (badge) badge.textContent = count;
+  </script>
 
+</body>
 </html>

@@ -3,103 +3,71 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
+const cartRoutes = require('./routes/cartRoutes');
+const sellerRoutes = require('./routes/sellerRoutes');
 
 dotenv.config();
-
 const app = express();
 
-// Middleware
+// ----------------------
+// MIDDLEWARE
+// ----------------------
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from the public folder (CSS, JS, images)
-app.use(express.static(path.join(__dirname, 'public')));
+// Static Assets
+app.use(express.static(path.join(__dirname, "public"))); // ✅ for CSS, JS, Images
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads'))); // serve uploaded media
 
-// API Routes
+// ----------------------
+// API ROUTES
+// ----------------------
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/cart', cartRoutes);
+app.use('/api/seller', sellerRoutes);
 
-// HTML Routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'signup.html'));
-});
+// ----------------------
+// HTML ROUTES
+// ----------------------
+const sendView = (file) => path.join(__dirname, 'views', file);
 
-app.get('/index.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
-});
+// Default to SIGNUP page
+app.get('/', (req, res) => res.sendFile(sendView('signup.html')));
 
-app.get('/signup.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'signup.html'));
-});
+// Public pages
+app.get('/index.html', (req, res) => res.sendFile(sendView('index.html')));
+app.get('/signup.html', (req, res) => res.sendFile(sendView('signup.html')));
+app.get('/login.html', (req, res) => res.sendFile(sendView('login.html')));
+app.get('/forgot-password.html', (req, res) => res.sendFile(sendView('forgot-password.html')));
+app.get('/reset-password.html', (req, res) => res.sendFile(sendView('reset-password.html')));
+app.get('/product-details.html', (req, res) => res.sendFile(sendView('product-details.html')));
+app.get('/about-us.html', (req, res) => res.sendFile(sendView('about-us.html')));
+app.get('/cart.html', (req, res) => res.sendFile(sendView('cart.html')));
+app.get('/checkout.html', (req, res) => res.sendFile(sendView('checkout.html')));
+app.get('/trackOrder.html', (req, res) => res.sendFile(sendView('trackOrder.html')));
+app.get('/seller.html', (req, res) => res.sendFile(sendView('seller.html')));
 
-app.get('/login.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'login.html'));
-});
+// Admin section
+const adminView = (file) => path.join(__dirname, 'views/admin', file);
+app.get('/admin', (req, res) => res.sendFile(adminView('index.html')));
+app.get('/admin/index.html', (req, res) => res.sendFile(adminView('index.html')));
+app.get('/admin/products.html', (req, res) => res.sendFile(adminView('products.html')));
+app.get('/admin/orders.html', (req, res) => res.sendFile(adminView('orders.html')));
+app.get('/admin/users.html', (req, res) => res.sendFile(adminView('users.html')));
 
-app.get('/forgot-password.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'forgot-password.html'));
-});
-
-app.get('/reset-password.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'reset-password.html'));
-});
-
-app.get('/product-details.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'product-details.html'));
-});
-
-// Admin product management page
-app.get('/admin/products.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'admin', 'products.html'));
-});
-
-app.get('admin/products.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'products.html'));
-});
-
-// Admin route
-app.get('/admin/index.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'admin', 'index.html'));
-});
-
-app.get('/admin/products.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'admin', 'products.html'));
-});
-
-
-
-// Admin product management page
-app.get('/admin/products.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'admin', 'products.html'));
-});
-
-app.get('admin/products.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'products.html'));
-});
-
-
-
-app.get('/about-us.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'about-us.html'));
-}); 
-
-app.get('/cart.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'cart.html'));
-});
-
-app.get('/checkout.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'checkout.html'));
-});
-
-app.get('/trackOrder.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'trackOrder.html'));
-});
-
-// MongoDB Connection
+// ----------------------
+// MONGODB CONNECTION
+// ----------------------
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// Start Server
-app.listen(5000, () => console.log('Server running at http://localhost:5000'));
+// ----------------------
+// START SERVER
+// ----------------------
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});

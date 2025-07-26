@@ -1,122 +1,96 @@
-// ✅ Load all products
-async function loadProducts() {
-  const res = await fetch("/api/products");
-  const products = await res.json();
-  const tbody = document.getElementById("productTableBody");
-  tbody.innerHTML = "";
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ DOM fully loaded");
 
-  products.forEach((p) => {
-    const row = `
-      <tr>
-        <td>${p.name}</td>
-        <td>${p.brand || '-'}</td>
-        <td>$${p.price}</td>
-        <td>${p.stock}</td>
-        <td>
-          <button onclick="editProduct('${p._id}')" class="btn btn-sm btn-info me-2">Edit</button>
-          <button onclick="deleteProduct('${p._id}')" class="btn btn-sm btn-danger">Delete</button>
-        </td>
-      </tr>
-    `;
-    tbody.innerHTML += row;
+  const form = document.getElementById("productForm");
+  const tableBody = document.getElementById("productTableBody");
+
+  if (!form) console.error("❌ productForm NOT found");
+  if (!tableBody) console.error("❌ productTableBody NOT found");
+
+  if (!form || !tableBody) {
+    console.error("❌ Required elements not found in DOM.");
+    return;
+  }
+
+  // Load products
+  loadProducts();
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("productId").value;
+    const method = id ? "PUT" : "POST";
+    const url = id ? `/api/products/${id}` : "/api/products";
+
+    const formData = new FormData(form);
+
+    const res = await fetch(url, {
+      method,
+      body: formData
+    });
+
+    if (res.ok) {
+      alert("Product saved!");
+      resetForm();
+      loadProducts();
+    } else {
+      const data = await res.json();
+      alert(data.message || "Error saving product.");
+    }
   });
-}
 
-// ✅ Add product
-document.getElementById("addProductForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const form = e.target;
+  async function loadProducts() {
+    const res = await fetch("/api/products");
+    const products = await res.json();
+    tableBody.innerHTML = "";
 
-  const product = {
-    name: form.name.value,
-    brand: form.brand.value,
-    category: form.category.value,
-    description: form.description.value,
-    price: form.price.value,
-    imageUrl: form.imageUrl.value,
-    stock: form.stock.value
+    products.forEach((p) => {
+      if (!p.isDeleted) {
+        tableBody.innerHTML += `
+          <tr>
+            <td>${p.name}</td>
+            <td>${p.brand || '-'}</td>
+            <td>$${p.price}</td>
+            <td>${p.stock}</td>
+            <td>
+              <button class="btn btn-sm btn-info" onclick="editProduct('${p._id}')">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteProduct('${p._id}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      }
+    });
+  }
+
+  window.editProduct = function(id) {
+    fetch(`/api/products/${id}`)
+      .then(res => res.json())
+      .then(p => {
+        document.getElementById("productId").value = p._id;
+        document.getElementById("name").value = p.name;
+        document.getElementById("brand").value = p.brand;
+        document.getElementById("category").value = p.category;
+        document.getElementById("description").value = p.description;
+        document.getElementById("price").value = p.price;
+        document.getElementById("stock").value = p.stock;
+      });
   };
 
-  const res = await fetch("/api/products", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(product)
-  });
+  window.deleteProduct = function(id) {
+    if (!confirm("Are you sure you want to delete this product?")) return;
 
-  const data = await res.json();
-  if (res.ok) {
-    alert("Product added!");
-    form.reset();
-    loadProducts();
-  } else {
-    alert(data.message || "Error adding product.");
-  }
-});
-
-// ✅ Edit product
-async function editProduct(id) {
-  const res = await fetch(`/api/products/${id}`);
-  const p = await res.json();
-
-  const form = document.getElementById("editProductForm");
-  form.style.display = "block";
-  form.id.value = p._id;
-  form.name.value = p.name;
-  form.brand.value = p.brand;
-  form.category.value = p.category;
-  form.description.value = p.description;
-  form.price.value = p.price;
-  form.imageUrl.value = p.imageUrl;
-  form.stock.value = p.stock;
-}
-
-// ✅ Submit product edit
-document.getElementById("editProductForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const form = e.target;
-
-  const updated = {
-    name: form.name.value,
-    brand: form.brand.value,
-    category: form.category.value,
-    description: form.description.value,
-    price: form.price.value,
-    imageUrl: form.imageUrl.value,
-    stock: form.stock.value
+    fetch(`/api/products/${id}`, {
+      method: "DELETE"
+    })
+      .then(res => res.json())
+      .then(() => {
+        alert("Product deleted successfully.");
+        loadProducts();
+      })
+      .catch(() => alert("Error deleting product"));
   };
 
-  const res = await fetch(`/api/products/${form.id.value}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updated)
-  });
-
-  if (res.ok) {
-    alert("Product updated!");
+  window.resetForm = function() {
     form.reset();
-    form.style.display = "none";
-    loadProducts();
-  } else {
-    alert("Failed to update.");
-  }
+    document.getElementById("productId").value = "";
+  };
 });
-
-// ✅ Delete product
-async function deleteProduct(id) {
-  if (!confirm("Are you sure you want to delete this product?")) return;
-
-  const res = await fetch(`/api/products/${id}`, {
-    method: "DELETE"
-  });
-
-  const data = await res.json();
-  if (res.ok) {
-    alert("Product deleted!");
-    loadProducts();
-  } else {
-    alert(data.message || "Error deleting product.");
-  }
-}
-
-// ✅ Initial load
-loadProducts();
