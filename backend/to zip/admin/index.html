@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard - StyleSync</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="/css/styles.css" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Admin Dashboard</a>
+      <a class="btn btn-outline-light" href="/index.html">Back to Shop</a>
+    </div>
+  </nav>
+
+  <!-- Admin Dashboard Section -->
+  <main class="container mt-5">
+    <h1 class="mb-4">Welcome, Admin!</h1>
+    <div class="list-group mb-5">
+      <a href="/admin/products.html" class="list-group-item list-group-item-action">🛍️ Manage Products</a>
+      <a href="/admin/orders.html" class="list-group-item list-group-item-action">📦 Manage Orders</a>
+      <a href="/admin/users.html" class="list-group-item list-group-item-action">👤 Manage Users</a>
+    </div>
+  </main>
+
+  <!-- Product Form -->
+  <section class="container mb-5">
+    <h2>Add / Edit Product</h2>
+    <form id="productForm" enctype="multipart/form-data">
+      <input type="hidden" id="productId" name="productId" />
+
+      <div class="mb-2">
+        <input type="text" class="form-control" id="name" name="name" placeholder="Product Name" required />
+      </div>
+      <div class="mb-2">
+        <input type="text" class="form-control" id="brand" name="brand" placeholder="Brand" />
+      </div>
+      <div class="mb-2">
+        <input type="text" class="form-control" id="category" name="category" placeholder="Category" />
+      </div>
+      <div class="mb-2">
+        <textarea class="form-control" id="description" name="description" placeholder="Description"></textarea>
+      </div>
+      <div class="mb-2">
+        <input type="number" class="form-control" id="price" name="price" placeholder="Price" required />
+      </div>
+      <div class="mb-2">
+        <input type="number" class="form-control" id="stock" name="stock" placeholder="Stock" />
+      </div>
+      <div class="mb-2">
+        <label for="video" class="form-label">Product Video</label>
+        <input type="file" class="form-control" id="video" name="video" accept="video/*" />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save Product</button>
+      <button type="reset" class="btn btn-secondary" onclick="resetForm()">Clear</button>
+    </form>
+  </section>
+
+  <!-- Product Table -->
+  <section class="container">
+    <h3>All Products</h3>
+    <table class="table table-bordered mt-4">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Brand</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="productTableBody"></tbody>
+    </table>
+  </section>
+
+  <!-- JS -->
+  <script src="/js/admin.js" defer></script>
+
+</body>
+</html>

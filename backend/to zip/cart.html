@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>StyleSync HomePage</title>
+        <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Bootstrap icons -->
+        <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-        <!-- Custom CSS -->
+        <!-- Core theme CSS (includes Bootstrap)-->
         <link href="/css/styles.css" rel="stylesheet" />
-        <link href="/css/about.css" rel="stylesheet" />
+        <link href="/css/cart.css" rel="stylesheet" />
+        
     </head>
 
     <body>
+        <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
             <div class="container px-4 px-lg-5">
                 <a class="navbar-brand" href="index.html">
@@ -48,62 +49,53 @@
                         <i class="bi-cart-fill me-1"></i>
                         Cart
                         <span id="cart-count" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </a>
+                    </a>
                 </div>
             </div>
         </nav>
-        <div class="container">
-            <div class="section">
-            <h1 class="main-title">
-                About Us
-            </h1>
-            <img src="/images/LogoStyleSync.png" class="logo" alt="Logo"/>
-            </div>
 
-            <p class="description">
-                Welcome to StyleSync, where we blend the power of social media with e-commerce to create a unique shopping experience. Our platform allows users to discover and purchase products directly from engaging video content, making online shopping more interactive and enjoyable.
-            </p>
-
-            <div class="grid">
-                <div class="card">
-                    <h2 class="sub-title">Our Mission</h2>
-                    <p>
-                    To revolutionize online shopping by merging engaging video content with seamless purchasing, making fashion discovery dynamic, personal, and effortless for everyone.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <h2 class="sub-title">Key Features</h2>
-                    <ul class="features-list">
-                    <li>Interactive Video Shopping Feed</li>
-                    <li>Instant Purchase</li>
-                    <li>Product Upload with Video Support</li>
-                    <li>Short video feed for product discovery</li>
-                    <li>Real-Time Inventory Sync</li>
-                    </ul>
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Cart</h1>
                 </div>
             </div>
+        </header>
+ 
+        <!--Shopping Cart-->
+        <section class="container content-section" id="shopping-cart">
+        
+        <table class="table table-hover table-cart">
+        <thead>
+            <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody class="cart-items">
+            
+            
+        </tbody>
+        </table>
 
-            <div class="section center">
-                <h2 class="sub-title">Meet the Team</h2>
-                <p>
-                    This project was developed as part of the course "Software Engineering and HCI (TEB2014)" for the May 2025 Semester at Universiti Teknologi PETRONAS.
-                </p>
-                <ul class="team-list">
-                    <li>Ekhwan Danial bin Ezarisma Azni (22010283)</li>
-                    <li>Muhammad Iman Hazim bin Ahmed Sulastry (22010203)</li>
-                    <li>Nur Adleena Hazimah binti Harzaha (22011243)</li>
-                    <li>Nur Umairah binti Mohamad Suwandi (22011671)</li>
-                </ul>
+            <div class="cart-total"> 
+            <strong class="cart-total-title">Total</strong>
+            <span  class="cart-total-price" style="text-align: right;">$0</span>
+            </div>
+        
+            <!-- Button Wrapper -->
+            <div class="btn-purchase-wrapper d-flex justify-content-center" style="margin-top: 10%;">
+            <a href="checkout.html" class="text-decoration-none">
+                <button type="button" class="btn btn-dark btn-purchase d-flex align-items-center justify-content-center px-4 py-2">
+                <i class="fa-solid fa-cart-shopping me-2"></i> PURCHASE
+                </button>
+            </a>
             </div>
 
-            <div class="section center">
-            <h2 class="sub-title">Acknowledgements</h2>
-            <p>
-                We extend our heartfelt thanks to our course instructor and peers for their continued support and valuable insights during the development process. Special appreciation to TikTok Shop for being a source of inspiration in exploring the future of e-commerce.
-            </p>
-            </div>
-        </div>
+        </section>
+        
         <!-- Footer-->
         <footer>
             <div class="container">
@@ -162,9 +154,10 @@
                 </div>
             </div>
         </footer>
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="/js/cart.js"></script>
-    </body>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/cart.js"></script>
 
+    </body>
 </html>
