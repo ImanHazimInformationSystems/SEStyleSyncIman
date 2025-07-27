@@ -1,5 +1,6 @@
+// cart-payment.js (Updated to handle image/video rendering)
 let subtotal = 0;
-let discountAmount = 0; // ✅ must match everywhere
+let discountAmount = 0; // must match everywhere
 
 async function renderCartItems() {
   const container = document.getElementById("cart-items");
@@ -38,7 +39,6 @@ async function renderCartItems() {
   }
 
   for (const item of items) {
-    // Unified structure
     const title = token ? item.product.name : item.title;
     const price = token ? item.product.price : parseFloat(item.price.replace(/[^0-9.]/g, ""));
     const image = token ? item.product.imageUrl || "/images/default.jpg" : item.image;
@@ -47,10 +47,15 @@ async function renderCartItems() {
     const itemTotal = price * quantity;
     subtotal += itemTotal;
 
+    const isVideo = image.match(/\.(mp4|mov|webm)$/i);
+    const mediaHTML = isVideo
+      ? `<video width="60" height="60" muted><source src="${image}" type="video/mp4">Video not supported</video>`
+      : `<img src="${image}" alt="${title}" width="60" height="60">`;
+
     const div = document.createElement("div");
     div.className = "cart-item";
     div.innerHTML = `
-      <img src="${image}" alt="${title}">
+      ${mediaHTML}
       <div>
         <p>${title}</p>
         <span>${quantity}x</span>
@@ -60,13 +65,12 @@ async function renderCartItems() {
     container.appendChild(div);
   }
 
-  updateTotals(); // ✅ update totals after rendering
+  updateTotals();
 }
-
 
 function updateTotals() {
   const shipping = 10.00;
-  const total = subtotal + shipping - discountAmount; // ✅ use the same name!
+  const total = subtotal + shipping - discountAmount;
 
   document.getElementById("subtotal").innerText = `$ ${subtotal.toFixed(2)}`;
   document.getElementById("shipping").innerText = `$ ${shipping.toFixed(2)}`;
@@ -90,10 +94,9 @@ function applyDiscount() {
     alert("Invalid discount code.");
   }
 
-  updateTotals(); // ✅ recalculate with new discount
+  updateTotals();
 }
 
-// ✅ Call render on load
 renderCartItems();
 
 let selectedPaymentMethod = localStorage.getItem("paymentMethod") || "";
@@ -102,11 +105,9 @@ function selectPayment(method) {
   selectedPaymentMethod = method;
   localStorage.setItem("paymentMethod", method);
 
-  // Remove all selected states
   document.getElementById("option-card").classList.remove("selected");
   document.getElementById("option-paypal").classList.remove("selected");
 
-  // Add selected class
   if (method === "card") {
     document.getElementById("option-card").classList.add("selected");
     document.getElementById("card-form").style.display = "block";
@@ -116,60 +117,37 @@ function selectPayment(method) {
   }
 }
 
-// On load, re-apply saved payment method
 window.onload = function() {
   document.getElementById("apply-discount-btn").addEventListener("click", applyDiscount);
-
   if (selectedPaymentMethod) {
     selectPayment(selectedPaymentMethod);
   }
 };
 
 const expiryInput = document.getElementById("card-expiry");
-
 expiryInput.addEventListener("input", () => {
-  // Remove all non-digits
   let value = expiryInput.value.replace(/\D/g, "");
-
-  // Limit to 4 digits max (MMYY)
-  if (value.length > 4) {
-    value = value.substring(0, 4);
-  }
-
-  // Format as MM/YY
-  if (value.length >= 3) {
-    value = value.substring(0, 2) + "/" + value.substring(2);
-  }
-
+  if (value.length > 4) value = value.substring(0, 4);
+  if (value.length >= 3) value = value.substring(0, 2) + "/" + value.substring(2);
   expiryInput.value = value;
 });
 
 const cardNumberInput = document.getElementById("card-number");
-
 cardNumberInput.addEventListener("input", formatCardNumber);
 
 function formatCardNumber(e) {
-  // Remove all non-digit characters
   let value = e.target.value.replace(/\D/g, "");
-
-  // Limit to 16 digits max
   value = value.substring(0, 16);
-
-  // Add spaces every 4 digits
   const parts = [];
   for (let i = 0; i < value.length; i += 4) {
     parts.push(value.substring(i, i + 4));
   }
-
   e.target.value = parts.join(" ");
 }
+
 const cvvInput = document.getElementById("card-cvv");
-
 cvvInput.addEventListener("input", () => {
-  // Remove all non-digits
   cvvInput.value = cvvInput.value.replace(/\D/g, "");
-
-  // Limit to max 3 digits
   if (cvvInput.value.length > 3) {
     cvvInput.value = cvvInput.value.slice(0, 3);
   }
@@ -182,9 +160,8 @@ function handlePayment() {
     const cardNumber = document.getElementById("card-number").value.trim();
     const cvv = document.getElementById("card-cvv").value.trim();
     const expiry = document.getElementById("card-expiry").value.trim();
-    // Remove spaces in card number
     const cleanCardNumber = cardNumber.replace(/\s+/g, "");
-    
+
     if (!/^\d{2}\/\d{2}$/.test(expiry)) {
       alert("Expiry Date must be in MM/YY format.");
       return;
@@ -208,14 +185,9 @@ function handlePayment() {
     }
 
     alert("Payment successful with card!");
-    // You can redirect or process further here
   } else if (selectedPaymentMethod === "paypal") {
     alert("Payment successful with PayPal!");
-    // Handle PayPal flow here
   } else {
     alert("Please select a payment method.");
   }
 }
-
-// ✅ Hook up Apply button AFTER HTML loads
-document.getElementById("apply-discount-btn").addEventListener("click", applyDiscount);

@@ -1,5 +1,16 @@
+function updateCartCount() {
+  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+  const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const cartCount = document.getElementById("cart-count");
+  if (cartCount) {
+    cartCount.textContent = totalQuantity;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-  // Page-specific logic
+
+  updateCartCount();
+
   if (document.querySelector(".cart-items")) {
     setupCartPage();
   }
@@ -100,7 +111,7 @@ async function setupCartPage() {
         const image = product.imageUrl || "/images/default.jpg";
         total += price * quantity;
 
-        addItemToCart(title, `$${price.toFixed(2)}`, image, quantity);
+        addItemToCart(title, `$${price.toFixed(2)}`, image, quantity, product._id);
       });
     } catch (err) {
       console.error("Cart fetch failed:", err.message);
@@ -123,65 +134,52 @@ async function setupCartPage() {
   const plusButtons = document.getElementsByClassName("plus");
   const minusButtons = document.getElementsByClassName("minus");
 
-  for (let btn of plusButtons) {
-    btn.addEventListener("click", function () {
-      const input = this.parentElement.querySelector(".cart-quantity-input");
-      input.value = parseInt(input.value) + 1;
-      updateCartTotal();
-      updateCartInLocalStorage(); // affects only guest carts
-    });
-  }
+  updateCartInLocalStorage();  // sync what's visible
+  updateCartCount();  
 
-  for (let btn of minusButtons) {
-    btn.addEventListener("click", function () {
-      const input = this.parentElement.querySelector(".cart-quantity-input");
-      if (parseInt(input.value) > 1) {
-        input.value = parseInt(input.value) - 1;
-        updateCartTotal();
-        updateCartInLocalStorage(); // affects only guest carts
-      }
-    });
-  }
-
-  const purchaseBtn = document.querySelector(".btn-purchase");
-  if (purchaseBtn) {
-    purchaseBtn.addEventListener("click", purchaseClicked);
-  }
 }
-
-
-
 /* ---------- SHARED FUNCTIONS ---------- */
 
-function addItemToCart(title, price, imageSrc, quantity) {
+function addItemToCart(title, price, imageSrc, quantity, productId = null) {
   const cartItemsContainer = document.querySelector(".cart-items");
 
   const cartRow = document.createElement("tr");
   cartRow.classList.add("cart-row");
-   const isVideo = imageSrc.match(/\.(mp4|mov|webm)$/i);
+
+  if (productId) {
+    cartRow.dataset.productId = productId;
+  }
+
+  const isVideo = imageSrc.match(/\.(mp4|mov|webm)$/i);
   cartRow.innerHTML = `
-      <td style="display: flex; align-items: center; gap: 10px;">
-        ${
-          isVideo
-            ? `<video width="60" height="60" style="border-radius: 5px;">
-                <source src="${imageSrc}" type="video/mp4">
-                Video not supported
-              </video>`
-            : `<img src="${imageSrc || '/images/default.jpg'}" width="60" height="60" style="object-fit: cover; border-radius: 5px;">`
-        }
-        <span>${title}</span>
-      </td>
-      <td class="cart-price">${price}</td>
-      <td>
-        <div class="quantity-controls" style="display: flex; align-items: center; gap: 5px;">
-          <input type="button" value="-" class="minus" />
-          <input type="number" class="cart-quantity-input" min="1" value="${quantity}" style="width: 50px; text-align: center;" readonly />
-          <input type="button" value="+" class="plus" />
-        </div>
-      </td>
-    `;
+    <td style="display: flex; align-items: center; gap: 10px;">
+      ${
+        isVideo
+          ? `<video width="60" height="60" style="border-radius: 5px;">
+              <source src="${imageSrc}" type="video/mp4">
+              Video not supported
+            </video>`
+          : `<img src="${imageSrc || '/images/default.jpg'}" width="60" height="60" style="object-fit: cover; border-radius: 5px;">`
+      }
+      <span>${title}</span>
+    </td>
+    <td class="cart-price">${price}</td>
+    <td>
+      <div class="quantity-controls" style="display: flex; align-items: center; gap: 5px;">
+        <input type="button" value="-" class="minus" />
+        <input type="number" class="cart-quantity-input" min="1" value="${quantity}" style="width: 50px; text-align: center;" readonly />
+        <input type="button" value="+" class="plus" />
+      </div>
+    </td>
+  `;
 
   cartItemsContainer.appendChild(cartRow);
+
+  // Refresh cart count
+  updateCartCount();
+
+  // Re-attach plus/minus events (safe for dynamic items)
+  attachQuantityHandlers();
 }
 
 function updateCartTotal() {
@@ -215,7 +213,8 @@ function updateCartInLocalStorage() {
   cartRows.forEach(row => {
     const title = row.querySelector("td span").innerText;
     const price = row.querySelector(".cart-price").innerText;
-    const image = row.querySelector("img").src;
+    const imgElement = row.querySelector("img");
+    const image = imgElement ? imgElement.src : "/images/default.jpg";
     const quantity = parseInt(row.querySelector(".cart-quantity-input").value);
 
     updatedCart.push({ title, price, image, quantity });
@@ -236,13 +235,80 @@ function quantityChanged(event) {
   updateCartInLocalStorage();
 }
 
-function updateCartCount() {
-  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-  const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const cartCount = document.getElementById("cart-count");
-  if (cartCount) {
-    cartCount.textContent = totalQuantity;
-  }
+function attachQuantityHandlers() {
+  const plusButtons = document.querySelectorAll(".plus");
+  const minusButtons = document.querySelectorAll(".minus");
+
+  plusButtons.forEach(btn => {
+    btn.onclick = async function () {
+      const row = this.closest(".cart-row");
+      const input = row.querySelector(".cart-quantity-input");
+      const productId = row.dataset.productId;
+      const token = localStorage.getItem("token");
+
+      input.value = parseInt(input.value) + 1;
+      updateCartTotal();
+      updateCartInLocalStorage();
+      updateCartCount();
+
+      if (token && productId) {
+        await fetch(`/api/cart/update/${productId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ quantity: parseInt(input.value) })
+        });
+      }
+    };
+  });
+
+  minusButtons.forEach(btn => {
+    btn.onclick = async function () {
+      const row = this.closest(".cart-row");
+      const input = row.querySelector(".cart-quantity-input");
+      const title = row.querySelector("td span").innerText.trim();
+      const productId = row.dataset.productId;
+      const token = localStorage.getItem("token");
+      const quantity = parseInt(input.value);
+
+      if (quantity > 1) {
+        input.value = quantity - 1;
+        updateCartTotal();
+        updateCartInLocalStorage();
+        updateCartCount();
+
+        if (token && productId) {
+          await fetch(`/api/cart/update/${productId}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ quantity: parseInt(input.value) })
+          });
+        }
+      } else {
+        row.remove();
+
+        if (token && productId) {
+          await fetch(`/api/cart/remove/${productId}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        }
+
+        let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        cartItems = cartItems.filter(item => item.title !== title);
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+        updateCartTotal();
+        updateCartInLocalStorage();
+        updateCartCount();
+      }
+    };
+  });
 }
 
 function purchaseClicked() {
@@ -260,4 +326,4 @@ function purchaseClicked() {
     document.querySelector(".cart-total-price").innerText = "$0.00";
     updateCartCount();
   }
-}
+}       
