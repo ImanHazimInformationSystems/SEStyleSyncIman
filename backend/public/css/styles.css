@@ -7331,8 +7331,10 @@ textarea.form-control-lg {
   height: 75% !important;
 }
 
-.h-100 {
+.h-100:hover {
   height: 100% !important;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .h-auto {
